@@ -20,63 +20,53 @@ var message;
 		await generateAlert(message, ["OK"]);
 		return;
 	}
-  
-	// Prompt for widget size and position.
-	message = "What size of widget are you creating?";
-	let sizes = ["Small", "Medium", "Large"];
-	let size = await generateAlert(message, sizes);
-	let widgetSize = sizes[size];
 
-	message = "What position will it be in?";
-	message += (height == 1136 ? " (Note that your device only supports two rows of widgets, so the middle and bottom options are the same.)" : "");
+	// Do all widget sizes and positions
 
-	// Determine image crop based on phone size.
 	let crop = { w: "", h: "", x: "", y: "" };
-	if (widgetSize == "Small") {
-		crop.w = phone.small;
-		crop.h = phone.small;
-		let positions = ["Top left", "Top right", "Middle left", "Middle right", "Bottom left", "Bottom right"];
-		let position = await generateAlert(message, positions);
+	let positions = [];
+	let imgCrop;
+	let FM = FileManager.local();
+	let folder = FM.bookmarkedPath("Images");
 
-		// Convert the two words into two keys for the phone size dictionary.
-		let keys = positions[position].toLowerCase().split(' ');
-		crop.y = phone[keys[0]];
-		crop.x = phone[keys[1]];
-	}
-	else if (widgetSize == "Medium") {
-		crop.w = phone.medium;
-		crop.h = phone.small;
+	// small widget size
+	positions = ["top left", "top right", "middle left", "middle right", "bottom left", "bottom right"];
+	crop.w = phone.small;
+	crop.h = phone.small;
+	for (let i=0; i<positions.length; i++) {
+		let keys = positions[i].split(' ');
+		crop.y = phone[ keys[0] ];
+		crop.x = phone[ keys[1] ];
 
-		// Medium and large widgets have a fixed x-value.
-		crop.x = phone.left;
-		let positions = ["Top","Middle","Bottom"];
-		let position = await generateAlert(message, positions);
-		let key = positions[position].toLowerCase();
-		crop.y = phone[key];
-	}
-	else if (widgetSize == "Large") {
-		crop.w = phone.medium;
-		crop.h = phone.large;
-		crop.x = phone.left;
-		let positions = ["Top","Bottom"];
-		let position = await generateAlert(message, positions);
-
-		// Large widgets at the bottom have the "middle" y-value.
-		crop.y = position ? phone.middle : phone.top;
+		imgCrop = cropImage(img, new Rect(crop.x,crop.y,crop.w,crop.h));
+		path = FM.joinPath(folder, "small_" + keys[0] + "_" + keys[1] + ".png");
+		FM.writeImage(path, imgCrop);
 	}
 
-	// Crop image and finalize the widget.
-	let imgCrop = cropImage(img, new Rect(crop.x,crop.y,crop.w,crop.h));
+	// medium widget size
+	positions = ["top", "middle", "bottom"];
+	crop.w = phone.medium;
+	crop.h = phone.small;
+	crop.x = phone.left;
+	for (let i=0; i<positions.length; i++) {
+		crop.y = phone[ positions[i] ];
 
-	message = "Your widget background is ready. Would you like to use it in a Scriptable widget or export the image?";
-	const exportPhotoOptions = ["Export to Files", "Export to Photos"];
-	const exportPhoto = await generateAlert(message, exportPhotoOptions);
-
-	if (exportPhoto) {
-		Photos.save(imgCrop);
+		imgCrop = cropImage(img, new Rect(crop.x,crop.y,crop.w,crop.h));
+		path = FM.joinPath(folder, "medium_" + positions[i] + ".png");
+		FM.writeImage(path, imgCrop);
 	}
-	else {
-		await DocumentPicker.exportImage(imgCrop);
+
+	// large widget size
+	positions = ["top", "bottom"];
+	crop.w = phone.medium;
+	crop.h = phone.large;
+	crop.x = phone.left;
+	for (let i=0; i<positions.length; i++) {
+		crop.y = i ? phone.middle : phone.top;
+
+		imgCrop = cropImage(img, new Rect(crop.x,crop.y,crop.w,crop.h));
+		path = FM.joinPath(folder, "large_" + positions[i] + ".png");
+		FM.writeImage(path, imgCrop);
 	}
 
 // Generate an alert with the provided array of options.
@@ -179,5 +169,5 @@ function phoneSizes() {
 			"bottom": 399
 		}
   	}
-  return phones;
+  	return phones;
 }
