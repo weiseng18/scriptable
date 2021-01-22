@@ -55,8 +55,13 @@ async function run() {
 	// backgroundImage
 	let FM = FileManager.local();
 	let path = FM.bookmarkedPath("Images");
+
+	// e.g. small_middle_left, white
+	let param = args.widgetParameter.split(", ");
+	let location = param[0];
+	let color = param[1];
 	// depends on the widget's parameter
-	widget.backgroundImage = FM.readImage(path + "/" + args.widgetParameter + ".png");
+	widget.backgroundImage = FM.readImage(path + "/" + location + ".png");
 
 	// fonts
 	let contentFont = new Font("Helvetica", 12);
@@ -65,20 +70,20 @@ async function run() {
 	// content
 	let header = widget.addText("24H PSI")
 	header.font = contentFont;
-	header.textColor = Color.black();
+	header.textColor = color == "white" ? Color.white() : Color.black();
 
 	let PSI = widget.addText(data.val.toString());
 	PSI.font = hugeFont;
-	PSI.textColor = Color.black();
+	PSI.textColor = color == "white" ? Color.white() : Color.black();
 
 	let desc = widget.addText(attributes.label);
 	desc.font = contentFont;
-	desc.textColor = Color.black();
+	desc.textColor = color == "white" ? Color.white() : Color.black();
 
 	let time = new Date(data.updateTime).toLocaleTimeString();
 	let updateTime = widget.addText("Updated at " + time);
 	updateTime.font = contentFont;
-	updateTime.textColor = Color.black();
+	updateTime.textColor = color == "white" ? Color.white() : Color.black();
 
 	Script.setWidget(widget);
 	Script.complete();
