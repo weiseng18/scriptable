@@ -1,3 +1,9 @@
+/*
+	Description:
+	Take a screenshot of your current wallpaper (necessary due to potential cropping when setting background). This widget will crop portions of the wallpaper, that can be used as backgrounds for widgets, so that it appears that the widget is transparent.
+	
+*/
+
 // main() function essentially
 // must be at top of script for some reason
 

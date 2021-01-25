@@ -1,3 +1,8 @@
+/*
+    Description:
+    Displays battery level, centered.
+*/
+
 async function run() {
     let widget = new ListWidget();
 

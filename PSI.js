@@ -1,3 +1,8 @@
+/*
+	Description:
+	Gets national PSI from gov.sg api
+*/
+
 // constants
 var link = "https://api.data.gov.sg/v1/environment/psi";
 
