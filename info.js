@@ -20,6 +20,11 @@ function getBackgroundImage(type) {
 	return FM.readImage(path + "/" + type + ".png");
 }
 
+function getJSON(url) {
+	let req = new Request(url);
+	return req.loadJSON();
+}
+
 async function run() {
 	let widget = new ListWidget();
 	widget.backgroundImage = getBackgroundImage(args.widgetParameter);
@@ -27,8 +32,9 @@ async function run() {
 	// adds active coronavirus cases
 	if (include_coronavirus) {
 		const url = "https://coronavirus-19-api.herokuapp.com/countries/singapore";
-		const req = new Request(url);
-		const data = await req.loadJSON();
+		const data = await getJSON(url);
+
+		const activeCases = data["active"].toString();
 
 		let description = widget.addText("Active cases:");
 		description.rightAlignText();
@@ -36,7 +42,7 @@ async function run() {
 		description.font = contentFont;
 		widget.addSpacer(5);
 
-		let amount = widget.addText(data["active"].toString());
+		let amount = widget.addText(activeCases);
 		amount.rightAlignText();
 		amount.textColor = Color.white();
 		amount.font = contentFont;
