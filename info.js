@@ -239,7 +239,8 @@ async function run() {
 
 		let closestCluster = {
 			distance: 1e9,
-			centroid: null
+			centroid: null,
+			numCases: null
 		};
 
 		for (let c=0; c<clusters.length; c++) {
@@ -257,6 +258,10 @@ async function run() {
 			if (minDistance < closestCluster.distance) {
 				closestCluster.distance = minDistance;
 				closestCluster.centroid = find_centroid(polygonPoints);
+
+				let pattern = /<td>No. of Dengue Cases :.*<\/td>/g;
+				let find = pattern.exec(clusters[c].properties.Description);
+				closestCluster.numCases = find[0].split("No. of Dengue Cases :")[1].split("</td>")[0];
 			}
 		}
 
@@ -296,6 +301,12 @@ async function run() {
 		distance.rightAlignText();
 		distance.textColor = color;
 		distance.font = contentFont;
+		widget.addSpacer(5);
+
+		let cases = widget.addText("Cases: " + closestCluster.numCases);
+		cases.rightAlignText();
+		cases.textColor = color;
+		cases.font = contentFont;
 		widget.addSpacer(5);
 	}
 
