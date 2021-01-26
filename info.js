@@ -176,7 +176,11 @@ function find_centroid(polygonPoints) {
 
 async function run() {
 	let widget = new ListWidget();
-	widget.backgroundImage = getBackgroundImage(args.widgetParameter);
+	let param = args.widgetParameter.split(", ");
+	let imageSrc = param[0];
+	widget.backgroundImage = getBackgroundImage(imageSrc);
+	let colorType = param[1];
+	let color = colorType == "white" ? Color.white() : Color.black();
 
 	// adds active coronavirus cases
 	if (include_coronavirus) {
@@ -187,13 +191,13 @@ async function run() {
 
 		let description = widget.addText("Active cases:");
 		description.rightAlignText();
-		description.textColor = Color.white();
+		description.textColor = color;
 		description.font = headerFont;
 		widget.addSpacer(5);
 
 		let amount = widget.addText(activeCases);
 		amount.rightAlignText();
-		amount.textColor = Color.white();
+		amount.textColor = color;
 		amount.font = contentFont;
 		widget.addSpacer(5);
 	}
@@ -208,13 +212,13 @@ async function run() {
 
 		let description = widget.addText("National PSI:");
 		description.rightAlignText();
-		description.textColor = Color.white();
+		description.textColor = color;
 		description.font = headerFont;
 		widget.addSpacer(5);
 
 		let value = widget.addText("(" + lastUpdate + ") " + nationalPSI);
 		value.rightAlignText();
-		value.textColor = Color.white();
+		value.textColor = color;
 		value.font = contentFont;
 		widget.addSpacer(5);
 	}
@@ -258,14 +262,14 @@ async function run() {
 
 		let description = widget.addText("Closest dengue cluster:");
 		description.rightAlignText();
-		description.textColor = Color.white();
+		description.textColor = color;
 		description.font = headerFont;
 		widget.addSpacer(5);
 
 		// last modified
 		let lastModifiedText = widget.addText(lastModified);
 		lastModifiedText.rightAlignText();
-		lastModifiedText.textColor = Color.white();
+		lastModifiedText.textColor = color;
 		lastModifiedText.font = contentFont;
 		widget.addSpacer(5);
 
@@ -274,7 +278,7 @@ async function run() {
 		let locLatLong = locationInfo[0].location.latitude.toFixed(5) + ", " + locationInfo[0].location.longitude.toFixed(5);
 		let latLong = widget.addText(locLatLong);
 		latLong.rightAlignText();
-		latLong.textColor = Color.white();
+		latLong.textColor = color;
 		latLong.font = contentFont;
 		widget.addSpacer(5);
 
@@ -282,7 +286,7 @@ async function run() {
 		let locationText = locationInfo[0].locality + ", " + locationInfo[0].name;
 		let location = widget.addText(locationText);
 		location.rightAlignText();
-		location.textColor = Color.white();
+		location.textColor = color;
 		location.font = contentFont;
 		widget.addSpacer(5);
 
@@ -290,7 +294,7 @@ async function run() {
 		let roundDistance = closestCluster.distance.toFixed(2).toString();
 		let distance = widget.addText(roundDistance + " km");
 		distance.rightAlignText();
-		distance.textColor = Color.white();
+		distance.textColor = color;
 		distance.font = contentFont;
 		widget.addSpacer(5);
 	}
