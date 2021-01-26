@@ -6,6 +6,7 @@
 	This widget's text is designed to be large, top, with text right aligned.
 */
 
+const headerFont = Font.boldSystemFont(20);
 const contentFont = Font.semiboldSystemFont(16);
 
 const include_coronavirus = true;
@@ -39,7 +40,7 @@ async function run() {
 		let description = widget.addText("Active cases:");
 		description.rightAlignText();
 		description.textColor = Color.white();
-		description.font = contentFont;
+		description.font = headerFont;
 		widget.addSpacer(5);
 
 		let amount = widget.addText(activeCases);
