@@ -2,6 +2,8 @@
 	Description:
 	This widget aims to fill the home screen with lots of data, that might not necessarily be useful, but just good to know.
 	1. Gets coronavirus numbers from https://coronavirus-19-api.herokuapp.com/countries/singapore
+	2. National PSI
+	3. Closest dengue cluster to current location
 
 	This widget's text is designed to be large, top, with text right aligned.
 */
