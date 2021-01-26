@@ -10,6 +10,7 @@ const headerFont = Font.boldSystemFont(20);
 const contentFont = Font.semiboldSystemFont(16);
 
 const include_coronavirus = true;
+const include_PSI = true;
 
 function getBackgroundImage(type) {
 	// backgroundImage
@@ -47,6 +48,28 @@ async function run() {
 		amount.rightAlignText();
 		amount.textColor = Color.white();
 		amount.font = contentFont;
+		widget.addSpacer(5);
+	}
+
+	// adds national PSI
+	if (include_PSI) {
+		const url = "https://api.data.gov.sg/v1/environment/psi";
+		const data = await getJSON(url);
+
+		const nationalPSI = data.items[0].readings["psi_twenty_four_hourly"].national.toString();
+		const lastUpdate = new Date(data.items[0].update_timestamp).toLocaleTimeString();
+
+		let description = widget.addText("National PSI:");
+		description.rightAlignText();
+		description.textColor = Color.white();
+		description.font = headerFont;
+		widget.addSpacer(5);
+
+		let value = widget.addText("(" + lastUpdate + ") " + nationalPSI);
+		value.rightAlignText();
+		value.textColor = Color.white();
+		value.font = contentFont;
+		widget.addSpacer(5);
 	}
 	
 	widget.addSpacer();
