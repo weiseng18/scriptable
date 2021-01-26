@@ -103,7 +103,7 @@ function phoneSizes() {
 			"small":  510,
 			"medium": 1092,
 			"large":  1146,
-			"left":  92,
+			"left":  96,
 			"right": 678,
 			"top":    246,
 			"middle": 882,
