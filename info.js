@@ -13,7 +13,7 @@ const contentFont = Font.semiboldSystemFont(16);
 
 const include_coronavirus = true;
 const include_PSI = true;
-const include_dengueClusters = true;
+const include_dengueClusters = false;
 
 function getBackgroundImage(type) {
 	// backgroundImage
