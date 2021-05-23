@@ -52,6 +52,9 @@ async function run() {
 		let url = "https://fantasy.premierleague.com/api/bootstrap-static/";
 		let data = await getJSON(url);
 
+		// if fpl season is over
+		let seasonOver = false;
+
 		// calculate current gw
 		let GWs = data.events;
 		let now = new Date().getTime();
@@ -59,57 +62,82 @@ async function run() {
 		let deadline = new Date(GWs[0].deadline_time).getTime();
 		while (deadline < now && gw < 38) {
 			gw++;
+
+			// prevent accessing out of bounds
+			if (gw == 38) {
+				seasonOver = true;
+				break;
+			}
+
 			deadline = new Date(GWs[gw].deadline_time).getTime();
 		}
 
-		// data for current gw
-		let upcomingGW = gw + 1;
-		let upcomingDeadline = deadline;
+		// season not over yet
+		if (!seasonOver) {
+			// data for current gw
+			let upcomingGW = gw + 1;
+			let upcomingDeadline = deadline;
 
-		// calculate time difference between upcomingDeadline and now
-		let delta = Math.abs(upcomingDeadline - now) / 1000;
+			// calculate time difference between upcomingDeadline and now
+			let delta = Math.abs(upcomingDeadline - now) / 1000;
 
-		let days = Math.floor(delta / 86400);
-		delta -= days * 86400;
+			let days = Math.floor(delta / 86400);
+			delta -= days * 86400;
 
-		let hours = Math.floor(delta / 3600) % 24;
-		delta -= hours * 3600;
+			let hours = Math.floor(delta / 3600) % 24;
+			delta -= hours * 3600;
 
-		let minutes = Math.floor(delta / 60) % 60;
+			let minutes = Math.floor(delta / 60) % 60;
 
-		let dayText = days + " day" + (days > 1 ? "s" : "");
-		let hoursText = hours + " hour" + (hours > 1 ? "s" : "");
-		let minutesText = minutes + " minute" + (minutes > 1 ? "s" : "");
+			let dayText = days + " day" + (days > 1 ? "s" : "");
+			let hoursText = hours + " hour" + (hours > 1 ? "s" : "");
+			let minutesText = minutes + " minute" + (minutes > 1 ? "s" : "");
 
-		let diffString = "";
-		let sep = ", ";
-		if (days > 0 && hours > 0 && minutes > 0)
-			diffString = dayText + sep + hoursText + sep + minutesText;
-		else if (days > 0 && hours > 0 && !minutes)
-			diffString = dayText + sep + hoursText;
-		else if (days > 0 && !hours && minutes > 0)
-			diffString = dayText + sep + minutesText;
-		else if (!days && hours > 0 && minutes > 0)
-			diffString = hoursText + sep + minutesText;
-		else if (!days && !hours && !minutes)
-			diffString = "Less than a minute";
+			let diffString = "";
+			let sep = ", ";
+			if (days > 0 && hours > 0 && minutes > 0)
+				diffString = dayText + sep + hoursText + sep + minutesText;
+			else if (days > 0 && hours > 0 && !minutes)
+				diffString = dayText + sep + hoursText;
+			else if (days > 0 && !hours && minutes > 0)
+				diffString = dayText + sep + minutesText;
+			else if (!days && hours > 0 && minutes > 0)
+				diffString = hoursText + sep + minutesText;
+			else if (!days && !hours && !minutes)
+				diffString = "Less than a minute";
+			else {
+				// only one of days, hours, or minutes is > 0
+				diffString = (days > 0 ? dayText : "") + (hours > 0 ? hoursText : "") + (minutes > 0 ? minutesText : "");
+			}
+
+			// actual widget text
+			let description = widget.addText("Time to GW " + upcomingGW + " deadline");
+			description.rightAlignText();
+			description.textColor = color;
+			description.font = headerFont;
+			widget.addSpacer(5);
+	
+			let difference = widget.addText(diffString);
+			difference.rightAlignText();
+			difference.textColor = color;
+			difference.font = contentFont;
+			widget.addSpacer(5);
+		}
 		else {
-			// only one of days, hours, or minutes is > 0
-			diffString = (days > 0 ? dayText : "") + (hours > 0 ? hoursText : "") + (minutes > 0 ? minutesText : "");
+			// actual widget text
+			let description = widget.addText("FPL is over");
+			description.rightAlignText();
+			description.textColor = color;
+			description.font = headerFont;
+			widget.addSpacer(5);
+	
+			let difference = widget.addText("See you next season!");
+			difference.rightAlignText();
+			difference.textColor = color;
+			difference.font = contentFont;
+			widget.addSpacer(5);
 		}
 
-		// actual widget text
-		let description = widget.addText("Time to GW " + upcomingGW + " deadline");
-		description.rightAlignText();
-		description.textColor = color;
-		description.font = headerFont;
-		widget.addSpacer(5);
-
-		let difference = widget.addText(diffString);
-		difference.rightAlignText();
-		difference.textColor = color;
-		difference.font = contentFont;
-		widget.addSpacer(5);
 	}
 
 	widget.addSpacer();
