@@ -1,0 +1,13 @@
+{
+  "name": "scriptable",
+  "version": "1.0.0",
+  "type": "module",
+  "devDependencies": {
+    "@scriptable-ios/eslint-config": "^1.6.4",
+    "@types/scriptable-ios": "^1.6.5",
+    "eslint": "^8.16.0"
+  },
+  "dependencies": {
+    "nusmoderator": "^3.0.0"
+  }
+}
