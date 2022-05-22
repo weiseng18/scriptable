@@ -9,5 +9,8 @@
   },
   "dependencies": {
     "nusmoderator": "^3.0.0"
+  },
+  "scripts": {
+    "convert": "browserify -s nusmoderator --bare node_modules/nusmoderator/dist/index.js -o exports/nusmoderator.js"
   }
 }
