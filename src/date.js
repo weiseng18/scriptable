@@ -9,6 +9,16 @@ console.log(NUSDate())
 const NUSModerator = importModule('nusmoderator')
 await run()
 //*/
+//
+function getBackgroundImage(type) {
+	// backgroundImage
+	let FM = FileManager.local();
+	let path = FM.bookmarkedPath("Images");
+
+	// e.g. small_middle_left
+	// depends on the widget's parameter
+	return FM.readImage(path + "/" + type + ".png");
+}
 
 function NUSDate() {
   const calendar = NUSModerator.academicCalendar
@@ -26,25 +36,30 @@ function NUSDate() {
     weekString = `${weekType} Week`
   }
 
-  // convert it
-  const string = `AY ${dateInfo.year}\n${dateInfo.sem}\n${weekString}`
-  return string
+  // year, sem, week
+  return {
+    year: `AY ${dateInfo.year}`,
+    sem: dateInfo.sem,
+    week: weekString,
+  }
 }
 
 async function run() {
   const widget = new ListWidget()
 
   // widget setup
-  widget.backgroundColor = Color.black()
-  const hugeFont = new Font("Helvetica", 12)
+  widget.backgroundImage = getBackgroundImage("small_top_left")
+  const textFont = Font.boldSystemFont(16)
 
   // NUS date
+  const info = NUSDate()
+
   const body = widget.addStack()
   body.addSpacer()
-  const text = NUSDate()
-  const content = body.addText(text)
-  content.font = hugeFont
-  content.textColor = Color.white()
+  const content = body.addText(`${info.year}\n${info.sem}\n${info.week}`)
+  content.font = textFont
+  content.textColor = Color.black()
+  content.centerAlignText()
   body.addSpacer()
 
   Script.setWidget(widget)
