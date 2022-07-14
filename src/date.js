@@ -26,6 +26,11 @@ function NUSDate() {
   // get relevant info
   const dateInfo = calendar.getAcadWeekInfo(new Date())
 
+  // sem info
+  let sem = dateInfo.sem
+  sem = sem.replace(/Special Term/, 'ST')
+  sem = sem.replace(/Semester/, 'Sem')
+
   // week info
   const weekNumber = dateInfo.num
   const weekInfo = calendar.getAcadWeekName(weekNumber)
@@ -39,7 +44,7 @@ function NUSDate() {
   // year, sem, week
   return {
     year: `AY ${dateInfo.year}`,
-    sem: dateInfo.sem,
+    sem,
     week: weekString,
   }
 }
@@ -56,7 +61,7 @@ async function run() {
 
   const body = widget.addStack()
   body.addSpacer()
-  const content = body.addText(`${info.year}\n${info.sem}\n${info.week}`)
+  const content = body.addText(`${info.year} ${info.sem}\n${info.week}`)
   content.font = textFont
   content.textColor = Color.black()
   content.centerAlignText()
