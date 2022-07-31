@@ -32,13 +32,17 @@ function NUSDate() {
   sem = sem.replace(/Semester/, 'Sem')
 
   // week info
-  const weekNumber = dateInfo.num
-  const weekInfo = calendar.getAcadWeekName(weekNumber)
   let weekString
-  if (weekInfo.weekType == 'Instructional') {
-    weekString = `Week ${weekNumber}`
+  if (dateInfo.type == 'Orientation') {
+    weekString = 'Orientation'
   } else {
-    weekString = `${weekType} Week`
+    const weekNumber = dateInfo.num
+    const weekInfo = calendar.getAcadWeekName(weekNumber)
+    if (weekInfo.weekType == 'Instructional') {
+      weekString = `Week ${weekNumber}`
+    } else {
+        weekString = `${weekType} Week`
+    }
   }
 
   // year, sem, week
