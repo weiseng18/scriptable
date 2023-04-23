@@ -33,10 +33,8 @@ function NUSDate() {
 
   // week info
   let weekString
-  if (dateInfo.type == 'Orientation') {
-    weekString = 'Orientation'
-  } else if (dateInfo.type == 'Recess') {
-    weekString = 'Recess'
+  if (dateInfo.type == 'Orientation' || dateInfo.type == 'Recess' || dateInfo.type == 'Reading') {
+    weekString = dateInfo.type
   } else {
     const weekNumber = dateInfo.num
     const weekInfo = calendar.getAcadWeekName(weekNumber)
